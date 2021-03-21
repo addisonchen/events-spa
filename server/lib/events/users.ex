@@ -38,8 +38,8 @@ defmodule Events.Users do
   def get_user!(id), do: Repo.get!(User, id)
 
 
-  def authenticate(name, pass) do
-    user = Repo.get_by(User, name: name)
+  def authenticate(email, pass) do
+    user = Repo.get_by(User, email: email)
     case Argon2.check_pass(user, pass) do
       {:ok, user} -> user
       _ -> nil

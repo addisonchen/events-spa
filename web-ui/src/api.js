@@ -42,8 +42,8 @@ export function fetch_meetings() {
   });
 }
 
-export function api_login(name, password) {
-  api_post("/session", {name, password}).then((data) => {
+export function api_login(email, password) {
+  api_post("/session", {email, password}).then((data) => {
     console.log("login resp", data);
     if (data.session) {
       let action = {

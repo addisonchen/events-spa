@@ -1,8 +1,8 @@
 defmodule EventsWeb.SessionController do
   use EventsWeb, :controller
 
-  def create(conn, %{"name" => name, "password" => password}) do
-    user = Events.Users.authenticate(name, password)
+  def create(conn, %{"email" => email, "password" => password}) do
+    user = Events.Users.authenticate(email, password)
     # TODO; Verify password
 
     session = %{
