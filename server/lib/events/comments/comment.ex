@@ -4,8 +4,8 @@ defmodule Events.Comments.Comment do
 
   schema "comments" do
     field :body, :string
-    belongs_to :user, Events.Users.User, on_delete: :delete_all
-    belongs_to :meeting, Events.Meetings.Meeting, on_delete: :delete_all
+    belongs_to :user, Events.Users.User
+    belongs_to :meeting, Events.Meetings.Meeting
 
     timestamps()
   end
