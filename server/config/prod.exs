@@ -16,6 +16,11 @@ config :events, EventsWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :cors_plug,
+  origin: ["http://events-spa.swoogity.com"],
+  max_age: 86400,
+  methods: ["GET", "POST", "PATCH", "DELETE"]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
