@@ -23,6 +23,13 @@ export default function CreateUser() {
 
     function onSubmit(ev) {
         ev.preventDefault();
+        if (user.password.length < 8) {
+            let newErrors = Object.assign({}, errors);
+            newErrors['password'] = 'password must be 8 characters or longer';
+            setErrors(newErrors);
+            return
+        }
+
         create_user(user).then((resp) => {
             if (resp.errors) {
                 if (resp.errors.name) {
@@ -40,7 +47,7 @@ export default function CreateUser() {
                 }
             } else {
                 api_login(user.email, user.password);
-                history.push("/")
+                history.push("/");
             }
         });
 

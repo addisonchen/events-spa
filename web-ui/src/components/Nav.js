@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Nav, Form, Button, Alert, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import store from './../store';
 
 
 function Login() {
+    const history = useHistory();
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
 
@@ -28,14 +29,16 @@ function Login() {
             </Form>
 
             <div style={{width: "20px"}}></div>
-            <Button variant="outline-light" className="linkContainer white">
-                <Link to={"/users/create"} className="linkInherit">Create Account</Link>
+            <Button variant="outline-light" onClick={() => {history.push('/users/create')}}>
+                Create Account
             </Button>
         </div>
     );
 }
 
 function LoggedIn({session}) {
+    const history = useHistory();
+
     function logout(ev) {
         ev.preventDefault();
         store.dispatch({type: 'session/clear'});
@@ -45,16 +48,16 @@ function LoggedIn({session}) {
         <div className="flex-row" style={{alignItems: "center"}}>
             <p className="white">Hello, {session.name}</p>
             <div style={{width: "20px"}}></div>
+            {/*
             <Button variant="outline-light white">
                 <Link to={`/users/${session.user_id}`} className="linkInherit">
                     Profile
                 </Link>
             </Button>
             <div style={{width: "20px"}}></div>
-            <Button variant="outline-light white">
-                <Link to={"/meetings/create"} className="linkInherit">
-                    + Meeting
-                </Link>
+            */}
+            <Button variant="outline-light" onClick={() => {history.push('/meetings/create')}}>
+                + Meeting
             </Button>
             <div style={{width: "20px"}}></div>
             <Button variant="outline-light" onClick={logout}>Logout</Button>
