@@ -12,11 +12,16 @@ defmodule EventsWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Users.create_user(user_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, user))
-      |> render("show.json", user: user)
+    case Users.create_user(user_params) do
+      {:ok, %User{} = user} ->
+        conn
+        |> EventsWeb.SessionController.create(%{"email" => user.email, "password" => user_params["password"]})
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(EventsWeb.ErrorView)
+        |> render("error.json", changeset: changeset)
+      _ -> raise "Unknown response: user_controller -> create -> default case"
     end
   end
 
