@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Table } from 'react-bootstrap';
 
 import { connect } from 'react-redux';
 
@@ -30,9 +30,26 @@ function Home({users, meetings}) {
                 </Col>
                 <Col md={6}>
                     <h2>Users</h2>
-                    {
-                        console.log(users)
-                    }
+                    <div style={{height: "25px"}}></div>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                users.map((user) => {
+                                    return (
+                                    <tr key={user.id}>
+                                        <td>{user.name}</td>
+                                        <td>{user.email}</td>
+                                    </tr>
+                                )})
+                            }
+                        </tbody>
+                    </Table>
                 </Col>
             </Row>
 

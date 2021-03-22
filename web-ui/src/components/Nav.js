@@ -29,7 +29,7 @@ function Login() {
 
             <div style={{width: "20px"}}></div>
             <Button variant="outline-light" className="linkContainer white">
-                <Link to={"users/create"} className="linkInherit">Create Account</Link>
+                <Link to={"/users/create"} className="linkInherit">Create Account</Link>
             </Button>
         </div>
     );
@@ -42,10 +42,22 @@ function LoggedIn({session}) {
     }
 
     return (
-        <div className="flex-row">
-            <p>Hello, {session.name}</p>
+        <div className="flex-row" style={{alignItems: "center"}}>
+            <p className="white">Hello, {session.name}</p>
             <div style={{width: "20px"}}></div>
-            <Button onClick={logout}>Logout</Button>
+            <Button variant="outline-light white">
+                <Link to={`/users/${session.user_id}`} className="linkInherit">
+                    Profile
+                </Link>
+            </Button>
+            <div style={{width: "20px"}}></div>
+            <Button variant="outline-light white">
+                <Link to={"/meetings/create"} className="linkInherit">
+                    + Meeting
+                </Link>
+            </Button>
+            <div style={{width: "20px"}}></div>
+            <Button variant="outline-light" onClick={logout}>Logout</Button>
         </div>
     )
 }
@@ -67,14 +79,14 @@ function Navigation({error}) {
     if (error) {
         error_alert = (
             <Row>
-                <Alert variant="danger">{error}</Alert>
+                <Alert variant="danger" style={{width: "100%", textAlign: "center"}}>{error}</Alert>
             </Row>
         );
     }
 
     return (
         <div>
-            <Navbar bg="dark" expand="lg">
+            <Navbar bg="dark" expand="md">
                 <Navbar.Brand>
                     <Link to={"/"} className="nav-link white">
                         Home

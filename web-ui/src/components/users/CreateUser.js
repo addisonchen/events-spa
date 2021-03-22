@@ -2,9 +2,13 @@ import { useState } from 'react';
 
 import { Form, Button } from 'react-bootstrap';
 
-import { create_user } from '../../api';
+import { create_user, api_login } from '../../api';
+
+import { useHistory } from 'react-router-dom';
 
 export default function CreateUser() {
+    const history = useHistory();
+
     let [user, setUser] = useState({
         'name': "",
         'email': "",
@@ -34,8 +38,12 @@ export default function CreateUser() {
                     newErrors['password'] = resp.errors.password[0];
                     setErrors(newErrors);
                 }
+            } else {
+                api_login(user.email, user.password);
+                history.push("/")
             }
         });
+
     }
 
     function updateName(ev) {
