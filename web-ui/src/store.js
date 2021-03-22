@@ -64,14 +64,14 @@ function error(state = null, action) {
 }
 
 function root_reducer(state, action) {
-  console.log("root reducer", state, action);
+  //console.log("root reducer", state, action);
 
   let redu = combineReducers(
     {users, meetings, session, error}
   );
 
   let state1 = redu(state, action);
-  console.log("state1", state1);
+  //console.log("state1", state1);
 
   return state1;
 }

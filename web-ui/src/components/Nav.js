@@ -19,17 +19,17 @@ function Login() {
     }
 
     return (
-        <div class="flex-row">
+        <div className="flex-row">
             <Form onSubmit={submitLogin} inline>
-                <Form.Control name="email" type="text" onChange={(ev) => setEmail(ev.target.value)} value={email} />
-                <Form.Control name="password" type="password" onChange={(ev) => setPass(ev.target.value)} value={pass} />
+                <Form.Control name="email" type="text" placeholder="email" onChange={(ev) => setEmail(ev.target.value)} value={email} />
+                <Form.Control name="password" type="password" placeholder="password" onChange={(ev) => setPass(ev.target.value)} value={pass} />
 
                 <Button variant="outline-light" type="submit">Login</Button>
             </Form>
 
-            <div style={{width: "20px;"}}></div>
-            <Button variant="outline-light">
-                <Link to={"users/create"} exact className="button">Create Account</Link>
+            <div style={{width: "20px"}}></div>
+            <Button variant="outline-light" className="linkContainer white">
+                <Link to={"users/create"} className="linkInherit">Create Account</Link>
             </Button>
         </div>
     );
@@ -42,9 +42,9 @@ function LoggedIn({session}) {
     }
 
     return (
-        <div class="flex-row">
+        <div className="flex-row">
             <p>Hello, {session.name}</p>
-            <div style={{width: "20px;"}}></div>
+            <div style={{width: "20px"}}></div>
             <Button onClick={logout}>Logout</Button>
         </div>
     )
@@ -74,25 +74,23 @@ function Navigation({error}) {
 
     return (
         <div>
-            <Row>
-                <Navbar bg="dark" expand="lg">
-                    <Navbar.Brand>
-                        <Link to={"/"} exact className="nav-link">
-                            Home
-                        </Link>
-                    </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="navbar" />
-                    <Navbar.Collapse id="navbar">
-                        <Nav className="mr-auto">
-                            <Nav.Item>
-                                <LoginSignUp />
-                            </Nav.Item>
-                        </Nav>
-                    </Navbar.Collapse>
-                    
-                </Navbar>
-            </Row>
-            {/* error_alert */}
+            <Navbar bg="dark" expand="lg">
+                <Navbar.Brand>
+                    <Link to={"/"} className="nav-link white">
+                        Home
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="navbar" />
+                <Navbar.Collapse id="navbar">
+                    <Nav className="justify-content-end" style={{width: "100%"}}>
+                        <Nav.Item>
+                            <LoginSignUp />
+                        </Nav.Item>
+                    </Nav>
+                </Navbar.Collapse>
+                
+            </Navbar>
+            { error_alert }
         </div>
 
     )

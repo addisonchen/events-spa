@@ -44,7 +44,7 @@ export function fetch_meetings() {
 
 export function api_login(email, password) {
   api_post("/session", {email, password}).then((data) => {
-    console.log("login resp", data);
+    //console.log("login resp", data);
     if (data.session) {
       let action = {
         type: 'session/set',
@@ -63,7 +63,7 @@ export function api_login(email, password) {
 }
 
 export function create_user(user) {
-  return api_post("/users", {user});
+  return api_post("/users", {user})
 }
 
 export function create_meeting(meeting) {
