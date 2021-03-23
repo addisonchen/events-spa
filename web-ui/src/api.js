@@ -106,6 +106,9 @@ export function delete_meeting(id) {
   return api_delete(`/meetings/${id}`);
 }
 
+export function update_meeting(id, data) {
+  return api_update(`/meetings/${id}`, data);
+}
 
 export function create_invite(invite) {
   return api_post("/invites", {invite});

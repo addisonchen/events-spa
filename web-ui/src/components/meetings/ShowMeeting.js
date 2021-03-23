@@ -306,20 +306,20 @@ function FoundMeetingView({session, meeting}) {
                     <div className="customContainer">
                         
                         { session.user_id === meeting.user_id ?
-                            <div className="flex-row" style={{justifyContent: "space-between", alignItems: "center"}}>
+                            <>
                                 <h1>{meeting.name}</h1>
-                                <div className="flex-row">
+                                <div className="flex-row" style={{marginTop: "10px", marginBottom: "10px"}}>
                                     <Button variant="primary" onClick={() => {history.push(`/meetings/edit/${meeting.id}`)}}>Edit</Button>
                                     <div style={{width: '10px'}}></div>
                                     <Button variant="danger" onClick={deleteMeeting} style={{height: "40px"}}>Delete</Button>
                                 </div>
-                            </div>
+                            </>
                             :
                             <h1>{meeting.name}</h1>
                         }
                         
                         <h5>{meeting.date}</h5>
-                        <p>{meeting.description}</p>
+                        <p><span className="bold">Description: </span>{meeting.description}</p>
                     </div>
                     <div style={{height: "20px"}}></div>
                     <div className="customContainer">

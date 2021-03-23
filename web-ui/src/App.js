@@ -8,6 +8,7 @@ import Home from './components/Home';
 import CreateUser from './components/users/CreateUser';
 import CreateMeeting from './components/meetings/CreateMeeting';
 import ShowMeeting from './components/meetings/ShowMeeting';
+import EditMeeting from './components/meetings/EditMeeting';
 
 
 function App() {
@@ -28,8 +29,12 @@ function App() {
             <CreateMeeting />
           </Route>
 
-          <Route path="/meetings/:id">
+          <Route exact path="/meetings/:id">
             <ShowMeeting />
+          </Route>
+
+          <Route exact path="/meetings/edit/:id">
+            <EditMeeting />
           </Route>
         </Switch>
       </Container>

@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { create_meeting } from '../../api';
-import { useHistory } from 'react-router-dom';
+import { update_meeting, show_meeting, delete_meeting, fetch_meetings } from '../../api';
+import { useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { InlineDateTimePicker } from 'react-tempusdominus-bootstrap';
 import moment from 'moment';
 
 
-function CreateMeeting({session}) {
-
+function EditMeeting({session}) {
+    const { id } = useParams();
     const history = useHistory();
     const [meeting, setMeeting] = useState({
         'name': "",
@@ -23,6 +23,24 @@ function CreateMeeting({session}) {
         'date': null,
         'description': null
     })
+
+    useEffect(() => {
+        show_meeting(id).then((resp) => {
+            setMeeting({
+                name: resp.name,
+                description: resp.description,
+                user_id: resp.user_id
+            });
+            setDate(resp.date);
+        })
+    }, [id]);
+
+    function deleteMeeting() {
+        delete_meeting(id).then((resp) => {
+            fetch_meetings();
+            history.push("/");
+        })
+    }
 
     function updateName(ev) {
         let newMeeting = Object.assign({}, meeting);
@@ -47,11 +65,17 @@ function CreateMeeting({session}) {
     function onSubmit(ev) {
         ev.preventDefault();
         let newMeeting = Object.assign({}, meeting);
-        newMeeting["user_id"] = session.user_id;
-        newMeeting["date"] = date.format('YYYY-MM-DD hh:mm:ss');
+        if (typeof date === "string") {
+            newMeeting["date"] = date;
+        } else {
+            newMeeting["date"] = date.format('YYYY-MM-DD hh:mm:ss');
+        }
 
         // todo: SUBMIT! catch errors
-        create_meeting(newMeeting).then((resp) => {
+        update_meeting(id, {
+            id: id,
+            meeting: newMeeting
+        }).then((resp) => {
             if (resp.errors) {
                 if (resp.errors.name) {
                     let newErrors = Object.assign({}, errors);
@@ -83,7 +107,8 @@ function CreateMeeting({session}) {
                     setErrors(newErrors);
                 }
             } else {
-                history.push(`/meetings/${resp.data.id}`);
+                // make this go to the meeting
+                history.push(`/meetings/${id}`)
             }
         });
     }
@@ -92,7 +117,7 @@ function CreateMeeting({session}) {
 
     return (
         <div className="margin padding">
-            <h1>Create Meeting</h1>
+            <h1>Edit Meeting</h1>
             { session === null ?
                 <p>You must be logged in to create a meeting</p>
             :
@@ -125,14 +150,19 @@ function CreateMeeting({session}) {
                             <Form.Text className="text-muted">Pick a date and time</Form.Text>
                         }
                     </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                        Create!
-                    </Button>
+                    <div className="flex-row">
+                        <Button variant="primary" type="submit">
+                            Edit
+                        </Button>
+                        <div style={{width: "25px"}}></div>
+                        <Button variant="danger" onClick={deleteMeeting}>
+                            Delete
+                        </Button>
+                    </div>
                 </Form>
             }
         </div>
     )
 }
 
-export default connect(({session}) => ({session}))(CreateMeeting)
+export default connect(({session}) => ({session}))(EditMeeting)
