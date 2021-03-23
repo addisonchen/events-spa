@@ -12,7 +12,7 @@ config :eventsapi,
 
 # Configures the endpoint
 config :eventsapi, EventsApiWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "http://events-spa.api.swoogity.com"],
   secret_key_base: "M6QdbpEzIOC0U0Rr1+uFkSXMAcsHiEiQkW+rjMo9HK9pfUw6cmtygld9AtMuyMwR",
   render_errors: [view: EventsApiWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: EventsApi.PubSub,
