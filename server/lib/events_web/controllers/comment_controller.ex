@@ -4,7 +4,55 @@ defmodule EventsWeb.CommentController do
   alias Events.Comments
   alias Events.Comments.Comment
 
+  plug :requireInvited when action in [:create]
+  plug :requireOwner when action in [:update, :delete]
+
   action_fallback EventsWeb.FallbackController
+
+  def requireInvited(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        user = Events.Users.get_user!(user_id)
+        invite = Events.Invites.get_invite(conn.params["comment"]["meeting_id"], user.email)
+        if invite != nil do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "You are not invited"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
+
+  def requireOwner(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        comment = Events.Comments.get_comment!(conn.params["id"])
+        if (user_id == comment.user_id) || (user_id == comment.meeting.user_id) do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "This is not your comment"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
 
   def index(conn, _params) do
     comments = Comments.list_comments()

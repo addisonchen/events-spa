@@ -4,7 +4,78 @@ defmodule EventsWeb.InviteController do
   alias Events.Invites
   alias Events.Invites.Invite
 
+  plug :requireMeetingOwnerCreate when action in [:create]
+  plug :requireMeetingOwnerDelete when action in [:delete]
+  plug :requireInvited when action in [:update]
+
   action_fallback EventsWeb.FallbackController
+
+  def requireMeetingOwnerCreate(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        meeting = Events.Meetings.get_meeting!(conn.params["invite"]["meeting_id"])
+        if meeting.user_id == user_id do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "this is not your meeting"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
+
+  def requireMeetingOwnerDelete(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        meeting = Events.Invites.get_invite!(conn.params["id"]).meeting
+        if meeting.user_id == user_id do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "this is not your meeting"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
+
+  def requireInvited(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        targetEmail = conn.params["invite"]["email"]
+        user = Events.Users.get_user!(user_id)
+        if targetEmail == user.email do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "this is not your invite"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
 
   def index(conn, _params) do
     invites = Invites.list_invites()
@@ -33,7 +104,6 @@ defmodule EventsWeb.InviteController do
   end
 
   def update(conn, %{"id" => id, "invite" => invite_params}) do
-    IO.puts "here"
     invite = Invites.get_invite!(id)
 
     with {:ok, %Invite{} = invite} <- Invites.update_invite(invite, invite_params) do

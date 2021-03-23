@@ -13,10 +13,14 @@ async function api_get(path) {
 
 
 async function api_post(path, data) {
+  let state = store.getState();
+  let token = state?.session?.token;
+
   let opts = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-auth': token
     },
     body: JSON.stringify(data),
   };
@@ -26,10 +30,14 @@ async function api_post(path, data) {
 }
 
 async function api_delete(path) {
+  let state = store.getState();
+  let token = state?.session?.token;
+
   let opts = {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-auth': token
     }
   }
   let resp = await fetch(
@@ -38,10 +46,14 @@ async function api_delete(path) {
 }
 
 async function api_update(path, data) {
+  let state = store.getState();
+  let token = state?.session?.token;
+  
   let opts = {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-auth': token
     },
     body: JSON.stringify(data)
   }

@@ -67,7 +67,6 @@ function InviteForm({session, props}) {
     function deleteSubmit(ev) {
         ev.preventDefault();
         if (inviteId) {
-            console.log(inviteId);
             delete_invite(inviteId).then((resp) => {
                 props.reload("Invite deleted")
             });
@@ -193,6 +192,7 @@ function Comments({session, props}) {
             user_id: session.user_id
         }).then((resp) => {
             props.reload("Comment created!")
+            setBody("");
         })
     }
 

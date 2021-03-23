@@ -3,8 +3,34 @@ defmodule EventsWeb.MeetingController do
 
   alias Events.Meetings
   alias Events.Meetings.Meeting
+  alias EventsWeb.Plugs
+
+  plug Plugs.RequireAuth when action in [:create]
+  plug :requireOwner when action in [:update, :delete]
 
   action_fallback EventsWeb.FallbackController
+
+  def requireOwner(conn, _args) do
+    token = Enum.at(get_req_header(conn, "x-auth"), 0)
+    case Phoenix.Token.verify(conn, "user_id",
+          token, max_age: 86400*3) do
+      {:ok, user_id} ->
+        meeting = Events.Meetings.get_meeting!(conn.params["id"])
+        if meeting.user_id == user_id do
+          conn
+        else
+          conn
+          |> put_resp_header("content-type", "application/json; charset=UTF-8")
+          |> send_resp(:unauthorized, Jason.encode!(%{"error" => "this is not your meeting"}))
+          |> halt()
+        end
+      {:error, err} ->
+        conn
+        |> put_resp_header("content-type", "application/json; charset=UTF-8")
+        |> send_resp(:unprocessable_entity,Jason.encode!(%{"error" => err}))
+        |> halt()
+    end
+  end
 
   def index(conn, _params) do
     meetings = Meetings.list_meetings()

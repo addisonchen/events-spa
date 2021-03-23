@@ -36,7 +36,14 @@ defmodule Events.Invites do
       ** (Ecto.NoResultsError)
 
   """
-  def get_invite!(id), do: Repo.get!(Invite, id)
+  def get_invite!(id) do
+    Repo.get!(Invite, id)
+    |> Repo.preload(:meeting)
+  end
+
+  def get_invite(meeting_id, email) do
+    Repo.get_by(Invite, [email: email, meeting_id: meeting_id])
+  end
 
   @doc """
   Creates a invite.

@@ -119,7 +119,7 @@ function EditMeeting({session}) {
         <div className="margin padding">
             <h1>Edit Meeting</h1>
             { session === null ?
-                <p>You must be logged in to create a meeting</p>
+                <p>You must be logged in to edit a meeting</p>
             :
                 <Form onSubmit={onSubmit}>
                     <Form.Group>
