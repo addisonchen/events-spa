@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Form, Button } from 'react-bootstrap';
 
-import { create_user, api_login } from '../../api';
+import { create_user, api_login, fetch_users } from '../../api';
 
 import { useHistory } from 'react-router-dom';
 
@@ -53,6 +53,7 @@ export default function CreateUser({inline}) {
                 setErrors(newErrors);
             } else {
                 api_login(user.email, user.password).then(() => {
+                    fetch_users();
                     if (inline) {
                         history.go(0);
                     } else {

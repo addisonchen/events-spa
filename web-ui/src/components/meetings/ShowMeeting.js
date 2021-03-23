@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button, Accordion, Card, Table, ListGroup } from 'react-bootstrap';
+import { Row, Col, Form, Button, Accordion, Card, Table, ListGroup, Alert } from 'react-bootstrap';
 import { fetch_meetings, show_meeting, delete_meeting, create_invite, delete_invite, update_invite, create_comment, delete_comment } from '../../api';
 import { useParams, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -47,7 +47,6 @@ function ShowInvites({invites}) {
 function InviteForm({session, props}) {
     const [email, setEmail] = useState("");
     const [inviteId, setInviteId] = useState(null);
-    const history = useHistory();
 
     function updateEmail(ev) {
         setEmail(ev.target.value);
@@ -60,7 +59,8 @@ function InviteForm({session, props}) {
             "meeting_id": parseInt(props.meeting_id),
             "status": "none" 
         }).then(() => {
-            history.go(0);
+            setEmail("");
+            props.reload(`Invite created! Share this link: http://events-spa.swoogity.com/meetings/${props.meeting_id}`);
         })
     }
 
@@ -69,7 +69,7 @@ function InviteForm({session, props}) {
         if (inviteId) {
             console.log(inviteId);
             delete_invite(inviteId).then((resp) => {
-                history.go(0);
+                props.reload("Invite deleted")
             });
         }
     }
@@ -124,7 +124,6 @@ const CreateInvite = connect(({session}, props) => {return {session: session, pr
 
 function RespondForm({session, props}) {
     const [status, setStatus] = useState(null);
-    const history = useHistory();
     var personalInviteId = -1;
     if (session) {
         var i;
@@ -150,7 +149,7 @@ function RespondForm({session, props}) {
                 status: status
             }
         }).then((resp) => {
-            history.go(0);
+            props.reload("Response created!")
         })
 
     }
@@ -185,7 +184,6 @@ const RespondInvite = connect(({session}, props) => {return {session: session, p
 function Comments({session, props}) {
 
     const [body, setBody] = useState("");
-    const history = useHistory();
 
     function onSubmit(ev) {
         ev.preventDefault();
@@ -194,13 +192,13 @@ function Comments({session, props}) {
             meeting_id: props.meeting.id,
             user_id: session.user_id
         }).then((resp) => {
-            history.go(0);
+            props.reload("Comment created!")
         })
     }
 
     function deleteComment(id) {
         delete_comment(id).then((resp) => {
-            history.go(0)
+            props.reload("Comment deleted")
         })
     }
 
@@ -264,7 +262,7 @@ function Comments({session, props}) {
 
 const ShowComments = connect(({session}, props) => ({session: session, props: props}))(Comments)
 
-function FoundMeetingView({session, meeting}) {
+function FoundMeetingView({session, meeting, reload}) {
     const history = useHistory();
     const [replies, setReplies] = useState({
         yes: 0,
@@ -272,6 +270,8 @@ function FoundMeetingView({session, meeting}) {
         maybe: 0,
         noResponse: 0
     })
+
+    const [show, setShow] = useState(true);
 
     useEffect(() => {
         let newReplies = {
@@ -302,6 +302,10 @@ function FoundMeetingView({session, meeting}) {
 
     }, [meeting])
 
+    useEffect(() => {
+        setShow(true);
+    }, [meeting]);
+
     function deleteMeeting() {
         delete_meeting(meeting.id).then((resp) => {
             fetch_meetings();
@@ -310,7 +314,12 @@ function FoundMeetingView({session, meeting}) {
     }
 
     return (
-        <>
+        <>  
+            { meeting.alert && show ? 
+                <Alert variant="primary" onClose={() => setShow(false)} dismissible>{meeting.alert}</Alert>
+            :
+                <></>
+            }
             <Row>
                 <Col md={6}>
                     <div className="customContainer">
@@ -340,7 +349,7 @@ function FoundMeetingView({session, meeting}) {
                         <h5><span className="bold">Host: </span>{meeting.user_name}</h5>
                         <h5><span className="bold">Email: </span>{meeting.user_email}</h5>
                     </div>
-                    <ShowComments meeting={meeting} />
+                    <ShowComments meeting={meeting} reload={reload}/>
                 </Col>
                 <Col md={6}>
                     <div className="customContainer">
@@ -357,7 +366,7 @@ function FoundMeetingView({session, meeting}) {
                             </span> no response
                         </p>
                         
-                        <CreateInvite user_id={meeting.user_id} meeting_id={meeting.id} invites={meeting.invites}/>
+                        <CreateInvite user_id={meeting.user_id} meeting_id={meeting.id} invites={meeting.invites} reload={reload} />
                         { session ?
                             <></>
                             :
@@ -366,8 +375,8 @@ function FoundMeetingView({session, meeting}) {
                                 <CreateUser inline={true} />
                             </>
                         }
-                        <RespondInvite invites={meeting.invites} />
-                        <ShowInvites invites={meeting.invites} meeting_id={meeting.id} />
+                        <RespondInvite invites={meeting.invites} reload={reload} />
+                        <ShowInvites invites={meeting.invites} meeting_id={meeting.id} reload={reload} />
                     </div>
                 </Col>
             </Row>
@@ -375,7 +384,7 @@ function FoundMeetingView({session, meeting}) {
     )
 }
 
-const FoundMeeting = connect(({session}, props) => ({session: session, meeting: props.meeting}))(FoundMeetingView);
+const FoundMeeting = connect(({session}, props) => ({session: session, meeting: props.meeting, reload: props.reload}))(FoundMeetingView);
 
 export default function ShowMeeting() {
     const { id } = useParams();
@@ -388,7 +397,8 @@ export default function ShowMeeting() {
         "user_email": "",
         "invites": [],
         "comments": [],
-        "id": id
+        "id": id,
+        "alert": null
     })
 
     const [found, setFound] = useState(true);
@@ -405,7 +415,8 @@ export default function ShowMeeting() {
                     "user_email": resp.user_email,
                     "invites": resp.invites,
                     "comments": resp.comments,
-                    "id": id
+                    "id": id,
+                    "alert": null
                 });
             })
             .catch((e) => {
@@ -415,11 +426,34 @@ export default function ShowMeeting() {
             });
     }, [id])
 
+    function reload(alert) {
+        show_meeting(id)
+            .then((resp) => {
+                setMeeting({
+                    "name": resp.name,
+                    "description": resp.description,
+                    "date": resp.date,
+                    "user_name": resp.user_name,
+                    "user_id": resp.user_id,
+                    "user_email": resp.user_email,
+                    "invites": resp.invites,
+                    "comments": resp.comments,
+                    "id": id,
+                    "alert": alert
+                });
+            })
+            .catch((e) => {
+                if (e instanceof SyntaxError) {
+                    setFound(false);
+                }
+            });
+    }
+
 
     return (
         <div className="margin padding top">
             { found ?
-                    <FoundMeeting meeting={meeting}/>
+                    <FoundMeeting meeting={meeting} reload={reload}/>
                 :
                     <p>Meeting not found</p>
             }
