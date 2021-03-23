@@ -2,6 +2,8 @@ defmodule Events.Comments.Comment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:body, :user_id, :meeting_id, :id, :user]}
+
   schema "comments" do
     field :body, :string
     belongs_to :user, Events.Users.User

@@ -22,7 +22,7 @@ function App() {
           </Route> 
 
           <Route exact path="/users/create">
-            <CreateUser />
+            <CreateUser inline={false} />
           </Route>
 
           <Route exact path="/meetings/create">

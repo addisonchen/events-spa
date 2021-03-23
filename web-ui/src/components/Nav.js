@@ -16,7 +16,10 @@ function Login() {
 
     function submitLogin(ev) {
         ev.preventDefault();
-        api_login(email, pass);
+        api_login(email, pass).then(() => {
+            history.go(0);
+        });
+
     }
 
     return (
@@ -42,7 +45,7 @@ function LoggedIn({session}) {
     function logout(ev) {
         ev.preventDefault();
         store.dispatch({type: 'session/clear'});
-        history.push("/")
+        history.go(0);
     }
 
     return (

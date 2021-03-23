@@ -50,9 +50,16 @@ defmodule Events.Invites do
 
   """
   def create_invite(attrs \\ %{}) do
-    %Invite{}
-    |> Invite.changeset(attrs)
-    |> Repo.insert()
+    IO.inspect attrs
+    invite = Repo.get_by(Invite, [email: attrs["email"], meeting_id: attrs["meeting_id"]])
+
+    if invite do
+      {:exists, %Invite{} = invite}
+    else
+      %Invite{}
+      |> Invite.changeset(attrs)
+      |> Repo.insert()
+    end
   end
 
   @doc """

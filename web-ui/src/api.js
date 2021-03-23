@@ -71,8 +71,7 @@ export function fetch_meetings() {
 }
 
 export function api_login(email, password) {
-  api_post("/session", {email, password}).then((data) => {
-    //console.log("login resp", data);
+  return api_post("/session", {email, password}).then((data) => {
     if (data.session) {
       let action = {
         type: 'session/set',

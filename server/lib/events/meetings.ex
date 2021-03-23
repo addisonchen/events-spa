@@ -35,7 +35,12 @@ defmodule Events.Meetings do
       ** (Ecto.NoResultsError)
 
   """
-  def get_meeting!(id), do: Repo.get!(Meeting, id)
+  def get_meeting!(id) do
+    Repo.get!(Meeting, id)
+    |> Repo.preload(:user)
+    |> Repo.preload(:invites)
+    |> Repo.preload(comments: [:user])
+  end
 
   @doc """
   Creates a meeting.

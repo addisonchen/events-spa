@@ -12,17 +12,24 @@ defmodule EventsWeb.MeetingController do
   end
 
   def create(conn, %{"meeting" => meeting_params}) do
-    with {:ok, %Meeting{} = meeting} <- Meetings.create_meeting(meeting_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.meeting_path(conn, :show, meeting))
-      |> render("show.json", meeting: meeting)
+    case Meetings.create_meeting(meeting_params) do
+      {:ok, %Meeting{} = meeting} ->
+        conn
+        |> put_status(:created)
+        |> put_resp_header("location", Routes.meeting_path(conn, :show, meeting))
+        |> render("show.json", meeting: meeting)
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(EventsWeb.ErrorView)
+        |> render("error.json", changeset: changeset)
+      _ -> raise "Unknown response: meeting_controller -> create -> default case"
     end
   end
 
   def show(conn, %{"id" => id}) do
     meeting = Meetings.get_meeting!(id)
-    render(conn, "show.json", meeting: meeting)
+    render(conn, "showExpanded.json", meeting: meeting)
   end
 
   def update(conn, %{"id" => id, "meeting" => meeting_params}) do

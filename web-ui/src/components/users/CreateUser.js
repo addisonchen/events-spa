@@ -6,7 +6,7 @@ import { create_user, api_login } from '../../api';
 
 import { useHistory } from 'react-router-dom';
 
-export default function CreateUser() {
+export default function CreateUser({inline}) {
     const history = useHistory();
 
     const [user, setUser] = useState({
@@ -32,39 +32,33 @@ export default function CreateUser() {
 
         create_user(user).then((resp) => {
             if (resp.errors) {
+                let newErrors = Object.assign({}, errors);
                 if (resp.errors.name) {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['name'] = resp.errors.name[0];
-                    setErrors(newErrors);
                 } else {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['name'] = "";
-                    setErrors(newErrors);
                 }
                 
                 if (resp.errors.email) {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['email'] = resp.errors.email[0];
-                    setErrors(newErrors);
                 } else {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['email'] = "";
-                    setErrors(newErrors);
                 }
 
                 if (resp.errors.password) {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['password'] = resp.errors.password[0];
-                    setErrors(newErrors);
                 } else {
-                    let newErrors = Object.assign({}, errors);
                     newErrors['password'] = "";
-                    setErrors(newErrors);
                 }
+                setErrors(newErrors);
             } else {
-                api_login(user.email, user.password);
-                // possibly make this go to user page
-                history.push("/");
+                api_login(user.email, user.password).then(() => {
+                    if (inline) {
+                        history.go(0);
+                    } else {
+                        history.push("/");
+                    }
+                })
             }
         });
 
@@ -89,8 +83,12 @@ export default function CreateUser() {
     }
 
     return (
-        <div className="margin padding">
-            <h1>Create Account</h1>
+        <div className={inline ? "inlineCreateUser" : "margin padding"}>
+            { inline ? 
+                <h6>Create Account</h6>
+            :
+                <h1>Create Account</h1>
+            }
             <Form onSubmit={onSubmit}>
                 <Form.Group>
                     <Form.Label>Name</Form.Label>

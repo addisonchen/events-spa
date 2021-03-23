@@ -3,10 +3,12 @@ import { Row, Col, Form, Button, Accordion, Card, Table, ListGroup } from 'react
 import { fetch_meetings, show_meeting, delete_meeting, create_invite, delete_invite, update_invite, create_comment, delete_comment } from '../../api';
 import { useParams, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import CreateUser from '../users/CreateUser';
+
 
 function ShowInvites({invites}) {
     return (
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey="0" style={{marginTop: '25px'}}>
             <Card>
                 <Card.Header>
                 <Accordion.Toggle as={Button} variant="link" eventKey="0">
@@ -124,10 +126,12 @@ function RespondForm({session, props}) {
     const [status, setStatus] = useState(null);
     const history = useHistory();
     var personalInviteId = -1;
-    var i;
-    for (i = 0; i < props.invites.length; i++) {
-        if (props.invites[i].email === session.email) {
-            personalInviteId = props.invites[i].id;
+    if (session) {
+        var i;
+        for (i = 0; i < props.invites.length; i++) {
+            if (props.invites[i].email === session.email) {
+                personalInviteId = props.invites[i].id;
+            }
         }
     }
 
@@ -204,17 +208,20 @@ function Comments({session, props}) {
     return (
         <div className="customContainer" style={{marginTop: "20px"}}>
             <h3>Comments</h3>
-            { props.meeting.invites.some((i) => i.email === session.email) ?
-                <Form onSubmit={onSubmit}>
-                    <Form.Group>
-                        <Form.Label>Write Comment</Form.Label>
-                        <div className="flex-row">
-                            <Form.Control type="text" onChange={(ev) => (setBody(ev.target.value))} value={body} />
-                            <Button variant="primary" type="submit">Post</Button>
-                        </div>
-                    </Form.Group>
-                </Form>
-                :
+            { session ?
+                props.meeting.invites.some((i) => i.email === session.email) ?
+                    <Form onSubmit={onSubmit}>
+                        <Form.Group>
+                            <Form.Label>Write Comment</Form.Label>
+                            <div className="flex-row">
+                                <Form.Control type="text" onChange={(ev) => (setBody(ev.target.value))} value={body} />
+                                <Button variant="primary" type="submit">Post</Button>
+                            </div>
+                        </Form.Group>
+                    </Form>
+                    :
+                    <p>you must be invited to comment</p>
+            :
                 <p>you must be invited to comment</p>
             }
             <Accordion style={{marginTop: "20px"}} defaultActiveKey="0">
@@ -233,9 +240,12 @@ function Comments({session, props}) {
                                         <ListGroup.Item key={c.id}>
                                             <div className="flex-row" style={{justifyContent: "space-between", alignItems: "center"}}>
                                                 <p><span className="bold">{c.user.name}:</span> {c.body}</p>
-                                                { (c.user_id === session.user_id) || (session.user_id === props.meeting.user_id) ?
-                                                    <Button variant="danger" onClick={() => {deleteComment(c.id)}}>Delete</Button>
-                                                    :
+                                                { session ?
+                                                    (c.user_id === session.user_id) || (session.user_id === props.meeting.user_id) ?
+                                                        <Button variant="danger" onClick={() => {deleteComment(c.id)}}>Delete</Button>
+                                                        :
+                                                        <></>
+                                                :
                                                     <></>
                                                 }
                                             </div>
@@ -304,17 +314,21 @@ function FoundMeetingView({session, meeting}) {
             <Row>
                 <Col md={6}>
                     <div className="customContainer">
-                        
-                        { session.user_id === meeting.user_id ?
-                            <>
+                        { session ?
+
+                            session.user_id === meeting.user_id ?
+                                <>
+                                    <h1>{meeting.name}</h1>
+                                    <div className="flex-row" style={{marginTop: "10px", marginBottom: "10px"}}>
+                                        <Button variant="primary" onClick={() => {history.push(`/meetings/edit/${meeting.id}`)}}>Edit</Button>
+                                        <div style={{width: '10px'}}></div>
+                                        <Button variant="danger" onClick={deleteMeeting} style={{height: "40px"}}>Delete</Button>
+                                    </div>
+                                </>
+                                :
                                 <h1>{meeting.name}</h1>
-                                <div className="flex-row" style={{marginTop: "10px", marginBottom: "10px"}}>
-                                    <Button variant="primary" onClick={() => {history.push(`/meetings/edit/${meeting.id}`)}}>Edit</Button>
-                                    <div style={{width: '10px'}}></div>
-                                    <Button variant="danger" onClick={deleteMeeting} style={{height: "40px"}}>Delete</Button>
-                                </div>
-                            </>
-                            :
+                            
+                        :
                             <h1>{meeting.name}</h1>
                         }
                         
@@ -344,6 +358,14 @@ function FoundMeetingView({session, meeting}) {
                         </p>
                         
                         <CreateInvite user_id={meeting.user_id} meeting_id={meeting.id} invites={meeting.invites}/>
+                        { session ?
+                            <></>
+                            :
+                            <> 
+                                <p className="inlineCreateUserHeader bold">Create an account to respond to an invite</p>
+                                <CreateUser inline={true} />
+                            </>
+                        }
                         <RespondInvite invites={meeting.invites} />
                         <ShowInvites invites={meeting.invites} meeting_id={meeting.id} />
                     </div>
