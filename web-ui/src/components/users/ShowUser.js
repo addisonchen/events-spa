@@ -44,7 +44,7 @@ function ShowUser({session}) {
             { found ? 
                 <>
                     <Row>
-                        <div className="customContainer">
+                        <Col>
                             <h1>{user.name}</h1>
                             <h6>{user.email}</h6>
                             {   session ?
@@ -57,7 +57,7 @@ function ShowUser({session}) {
                                 :
                                 <></>
                             }
-                        </div>
+                        </Col>
                     </Row>
                     <Row style={{marginTop: "30px"}}>
                         <Col md={6}>
