@@ -32,9 +32,16 @@ defmodule EventsWeb.UserController do
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
-
-    with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+    case Users.update_user(user, user_params) do
+      {:ok, %User{} = user} ->
+        conn
+        |> render("show.json", user: user)
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(EventsWeb.ErrorView)
+        |> render("error.json", changeset: changeset)
+      _ -> raise "Unknown response: user_controller -> update -> default case"
     end
   end
 

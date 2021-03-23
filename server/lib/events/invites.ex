@@ -19,6 +19,7 @@ defmodule Events.Invites do
   """
   def list_invites do
     Repo.all(Invite)
+    |> Repo.preload(:meeting)
   end
 
   @doc """

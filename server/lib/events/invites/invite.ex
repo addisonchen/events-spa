@@ -2,7 +2,7 @@ defmodule Events.Invites.Invite do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:status, :email, :meeting_id, :id]}
+  @derive {Jason.Encoder, only: [:status, :email, :id]}
 
   schema "invites" do
     field :email, :string

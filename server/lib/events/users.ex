@@ -19,6 +19,7 @@ defmodule Events.Users do
   """
   def list_users do
     Repo.all(User)
+    |> Repo.preload(:meetings)
   end
 
   @doc """
@@ -35,7 +36,11 @@ defmodule Events.Users do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:meetings)
+    |> Repo.preload(:comments)
+  end
 
 
   def authenticate(email, pass) do

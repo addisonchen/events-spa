@@ -19,6 +19,7 @@ defmodule Events.Meetings do
   """
   def list_meetings do
     Repo.all(Meeting)
+
   end
 
   @doc """

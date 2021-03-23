@@ -52,14 +52,10 @@ function LoggedIn({session}) {
         <div className="flex-row" style={{alignItems: "center"}}>
             <p className="white">Hello, {session.name}</p>
             <div style={{width: "20px"}}></div>
-            {/*
-            <Button variant="outline-light white">
-                <Link to={`/users/${session.user_id}`} className="linkInherit">
-                    Profile
-                </Link>
+            <Button variant="outline-light" onClick={() => {history.push(`/users/${session.user_id}`)}}>
+                Profile
             </Button>
             <div style={{width: "20px"}}></div>
-            */}
             <Button variant="outline-light" onClick={() => {history.push('/meetings/create')}}>
                 + Meeting
             </Button>

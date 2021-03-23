@@ -93,6 +93,18 @@ export function create_user(user) {
   return api_post("/users", {user});
 }
 
+export function show_user(id) {
+  return api_get(`/users/${id}`);
+}
+
+export function update_user(id, data) {
+  return api_update(`/users/${id}`, data);
+}
+
+export function delete_user(id) {
+  return api_delete( `/users/${id}`);
+}
+
 export function create_meeting(meeting) {
   return api_post("/meetings", {meeting});
 }
@@ -119,6 +131,10 @@ export function delete_invite(id) {
 
 export function update_invite(id, data) {
   return api_update(`/invites/${id}`, data);
+}
+
+export function all_invites() {
+  return api_get('/invites');
 }
 
 export function create_comment(comment) {

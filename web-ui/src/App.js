@@ -9,7 +9,8 @@ import CreateUser from './components/users/CreateUser';
 import CreateMeeting from './components/meetings/CreateMeeting';
 import ShowMeeting from './components/meetings/ShowMeeting';
 import EditMeeting from './components/meetings/EditMeeting';
-
+import EditUser from './components/users/EditUser';
+import ShowUser from './components/users/ShowUser';
 
 function App() {
   return (
@@ -21,8 +22,16 @@ function App() {
             <Home />
           </Route> 
 
+          <Route exact path="/users/:id">
+            <ShowUser />
+          </Route>
+
           <Route exact path="/users/create">
             <CreateUser inline={false} />
+          </Route>
+
+          <Route exact path="/users/edit/:id">
+            <EditUser />
           </Route>
 
           <Route exact path="/meetings/create">

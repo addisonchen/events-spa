@@ -2,6 +2,8 @@ defmodule Events.Meetings.Meeting do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:date, :description, :name, :id]}
+
   schema "meetings" do
     field :date, :utc_datetime
     field :description, :string
