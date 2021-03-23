@@ -2,7 +2,7 @@
 
 import store from './store';
 
-const url = "http://localhost:4000/api/v1";
+const url = "http://events-spa.api.swoogity.com/api/v1";
 
 async function api_get(path) {
   let resp = await fetch(
