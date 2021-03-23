@@ -1,4 +1,4 @@
-defmodule Events.Repo.Migrations.CreateUsers do
+defmodule EventsApi.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do

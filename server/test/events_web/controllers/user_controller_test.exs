@@ -1,8 +1,8 @@
-defmodule EventsWeb.UserControllerTest do
-  use EventsWeb.ConnCase
+defmodule EventsApiWeb.UserControllerTest do
+  use EventsApiWeb.ConnCase
 
-  alias Events.Users
-  alias Events.Users.User
+  alias EventsApi.Users
+  alias EventsApi.Users.User
 
   @create_attrs %{
     email: "some email",

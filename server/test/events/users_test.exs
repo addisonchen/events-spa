@@ -1,10 +1,10 @@
-defmodule Events.UsersTest do
-  use Events.DataCase
+defmodule EventsApi.UsersTest do
+  use EventsApi.DataCase
 
-  alias Events.Users
+  alias EventsApi.Users
 
   describe "users" do
-    alias Events.Users.User
+    alias EventsApi.Users.User
 
     @valid_attrs %{email: "some email", name: "some name", password_hash: "some password_hash"}
     @update_attrs %{email: "some updated email", name: "some updated name", password_hash: "some updated password_hash"}

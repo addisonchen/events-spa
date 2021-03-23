@@ -1,8 +1,8 @@
-defmodule EventsWeb.MeetingControllerTest do
-  use EventsWeb.ConnCase
+defmodule EventsApiWeb.MeetingControllerTest do
+  use EventsApiWeb.ConnCase
 
-  alias Events.Meetings
-  alias Events.Meetings.Meeting
+  alias EventsApi.Meetings
+  alias EventsApi.Meetings.Meeting
 
   @create_attrs %{
     date: "2010-04-17T14:00:00Z",

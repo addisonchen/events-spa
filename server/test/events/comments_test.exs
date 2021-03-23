@@ -1,10 +1,10 @@
-defmodule Events.CommentsTest do
-  use Events.DataCase
+defmodule EventsApi.CommentsTest do
+  use EventsApi.DataCase
 
-  alias Events.Comments
+  alias EventsApi.Comments
 
   describe "comments" do
-    alias Events.Comments.Comment
+    alias EventsApi.Comments.Comment
 
     @valid_attrs %{body: "some body"}
     @update_attrs %{body: "some updated body"}

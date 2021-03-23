@@ -1,10 +1,10 @@
-defmodule Events.MeetingsTest do
-  use Events.DataCase
+defmodule EventsApi.MeetingsTest do
+  use EventsApi.DataCase
 
-  alias Events.Meetings
+  alias EventsApi.Meetings
 
   describe "meetings" do
-    alias Events.Meetings.Meeting
+    alias EventsApi.Meetings.Meeting
 
     @valid_attrs %{date: "2010-04-17T14:00:00Z", description: "some description", name: "some name"}
     @update_attrs %{date: "2011-05-18T15:01:01Z", description: "some updated description", name: "some updated name"}

@@ -1,4 +1,4 @@
-defmodule Events.Repo.Migrations.CreateMeetings do
+defmodule EventsApi.Repo.Migrations.CreateMeetings do
   use Ecto.Migration
 
   def change do

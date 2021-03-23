@@ -1,4 +1,4 @@
-# Events
+# EventsApi
 
 To start your Phoenix server:
 

@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :events, Events.Repo,
-  username: "events_spa",
+config :eventsapi, EventsApi.Repo,
+  username: "eventsapi_spa",
   password: "ohKee0vaequa",
-  database: "events_spa",
+  database: "eventsapi_spa",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :events, Events.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :events, EventsWeb.Endpoint,
+config :eventsapi, EventsApiWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -47,13 +47,13 @@ config :events, EventsWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :events, EventsWeb.Endpoint,
+config :eventsapi, EventsApiWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/events_web/(live|views)/.*(ex)$",
-      ~r"lib/events_web/templates/.*(eex)$"
+      ~r"lib/eventsapi_web/(live|views)/.*(ex)$",
+      ~r"lib/eventsapi_web/templates/.*(eex)$"
     ]
   ]
 

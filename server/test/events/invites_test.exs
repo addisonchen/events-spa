@@ -1,10 +1,10 @@
-defmodule Events.InvitesTest do
-  use Events.DataCase
+defmodule EventsApi.InvitesTest do
+  use EventsApi.DataCase
 
-  alias Events.Invites
+  alias EventsApi.Invites
 
   describe "invites" do
-    alias Events.Invites.Invite
+    alias EventsApi.Invites.Invite
 
     @valid_attrs %{email: "some email", status: "some status"}
     @update_attrs %{email: "some updated email", status: "some updated status"}

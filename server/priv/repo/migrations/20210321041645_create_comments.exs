@@ -1,4 +1,4 @@
-defmodule Events.Repo.Migrations.CreateComments do
+defmodule EventsApi.Repo.Migrations.CreateComments do
   use Ecto.Migration
 
   def change do

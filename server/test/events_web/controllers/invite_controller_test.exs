@@ -1,8 +1,8 @@
-defmodule EventsWeb.InviteControllerTest do
-  use EventsWeb.ConnCase
+defmodule EventsApiWeb.InviteControllerTest do
+  use EventsApiWeb.ConnCase
 
-  alias Events.Invites
-  alias Events.Invites.Invite
+  alias EventsApi.Invites
+  alias EventsApi.Invites.Invite
 
   @create_attrs %{
     email: "some email",

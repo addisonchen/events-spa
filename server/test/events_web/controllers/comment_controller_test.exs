@@ -1,8 +1,8 @@
-defmodule EventsWeb.CommentControllerTest do
-  use EventsWeb.ConnCase
+defmodule EventsApiWeb.CommentControllerTest do
+  use EventsApiWeb.ConnCase
 
-  alias Events.Comments
-  alias Events.Comments.Comment
+  alias EventsApi.Comments
+  alias EventsApi.Comments.Comment
 
   @create_attrs %{
     body: "some body"
