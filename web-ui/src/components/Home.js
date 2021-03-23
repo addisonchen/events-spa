@@ -3,6 +3,7 @@ import React from 'react';
 import { Row, Col, Table } from 'react-bootstrap';
 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 function Home({users, meetings}) {
@@ -24,9 +25,31 @@ function Home({users, meetings}) {
             <Row>
                 <Col md={6}>
                     <h2>Meetings</h2>
-                    {
-                        console.log(meetings)
-                    }
+                    <div style={{height: "25px"}}></div>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                meetings.map((meeting) => {
+                                    return (
+                                        <tr key={meeting.id}>
+                                            <td>
+                                                <Link to={`/meetings/${meeting.id}`}>
+                                                    {meeting.name}
+                                                </Link>
+                                            </td>
+                                            <td>{meeting.date}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
                 </Col>
                 <Col md={6}>
                     <h2>Users</h2>

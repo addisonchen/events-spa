@@ -2,12 +2,15 @@
 
 import store from './store';
 
+const url = "http://localhost:4000/api/v1";
+
 async function api_get(path) {
   let resp = await fetch(
-    "http://localhost:4000/api/v1" + path, {});
+    url + path, {});
   let respJson = await resp.json();
   return respJson.data;
 }
+
 
 async function api_post(path, data) {
   let opts = {
@@ -18,7 +21,32 @@ async function api_post(path, data) {
     body: JSON.stringify(data),
   };
   let resp = await fetch(
-    "http://localhost:4000/api/v1" + path, opts);
+    url + path, opts);
+  return await resp.json();
+}
+
+async function api_delete(path) {
+  let opts = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  let resp = await fetch(
+    url + path, opts);
+  return await resp.text();
+}
+
+async function api_update(path, data) {
+  let opts = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }
+  let resp = await fetch(
+    url + path, opts);
   return await resp.json();
 }
 
@@ -63,12 +91,43 @@ export function api_login(email, password) {
 }
 
 export function create_user(user) {
-  return api_post("/users", {user})
+  return api_post("/users", {user});
 }
 
 export function create_meeting(meeting) {
-  return api_post("/meetings", {meeting})
+  return api_post("/meetings", {meeting});
 }
+
+export function show_meeting(id) {
+  return api_get(`/meetings/${id}`)
+}
+
+export function delete_meeting(id) {
+  return api_delete(`/meetings/${id}`);
+}
+
+
+export function create_invite(invite) {
+  return api_post("/invites", {invite});
+}
+
+export function delete_invite(id) {
+  return api_delete(`/invites/${id}`);
+}
+
+export function update_invite(id, data) {
+  return api_update(`/invites/${id}`, data);
+}
+
+export function create_comment(comment) {
+  return api_post("/comments", {comment});
+}
+
+export function delete_comment(id) {
+  return api_delete(`/comments/${id}`);
+}
+
+
 
 export function load_defaults() {
   fetch_meetings();

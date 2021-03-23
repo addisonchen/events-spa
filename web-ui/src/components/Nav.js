@@ -42,6 +42,7 @@ function LoggedIn({session}) {
     function logout(ev) {
         ev.preventDefault();
         store.dispatch({type: 'session/clear'});
+        history.push("/")
     }
 
     return (
@@ -74,7 +75,7 @@ function LoginForms({session}) {
     }
 }
 
-const LoginSignUp = connect(({session}) => ({session}))(LoginForms)
+const LoginSignUp = connect(({session}) => ({session}))(LoginForms);
 
 function Navigation({error}) {
     let error_alert = null;

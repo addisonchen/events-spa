@@ -24,12 +24,22 @@ function save_session(s) {
   localStorage.setItem("session", JSON.stringify(session));
 }
 
+function delete_session() {
+  localStorage.setItem("session", null);
+}
+
 function restore_session() {
   let session = localStorage.getItem("session");
   if (!session) {
     return null;
   }
+
   session = JSON.parse(session);
+
+  if (session === null) {
+    return null;
+  }
+  
   let age = Date.now() - session.time;
   let hours = 60 * 60 * 1000;
   if (age < 72 * hours) {
@@ -46,6 +56,7 @@ function session(state = restore_session(), action) {
       save_session(action.data);
       return action.data;
     case 'session/clear':
+      delete_session();
       return null;
     default:
       return state;

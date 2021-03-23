@@ -9,13 +9,13 @@ import { useHistory } from 'react-router-dom';
 export default function CreateUser() {
     const history = useHistory();
 
-    let [user, setUser] = useState({
+    const [user, setUser] = useState({
         'name': "",
         'email': "",
         'password': ""
     });
 
-    let [errors, setErrors] = useState({
+    const [errors, setErrors] = useState({
         'name': null,
         'email': null,
         'password': null
@@ -36,17 +36,34 @@ export default function CreateUser() {
                     let newErrors = Object.assign({}, errors);
                     newErrors['name'] = resp.errors.name[0];
                     setErrors(newErrors);
-                } else if (resp.errors.email) {
+                } else {
+                    let newErrors = Object.assign({}, errors);
+                    newErrors['name'] = "";
+                    setErrors(newErrors);
+                }
+                
+                if (resp.errors.email) {
                     let newErrors = Object.assign({}, errors);
                     newErrors['email'] = resp.errors.email[0];
                     setErrors(newErrors);
-                } else if (resp.errods.password) {
+                } else {
+                    let newErrors = Object.assign({}, errors);
+                    newErrors['email'] = "";
+                    setErrors(newErrors);
+                }
+
+                if (resp.errors.password) {
                     let newErrors = Object.assign({}, errors);
                     newErrors['password'] = resp.errors.password[0];
+                    setErrors(newErrors);
+                } else {
+                    let newErrors = Object.assign({}, errors);
+                    newErrors['password'] = "";
                     setErrors(newErrors);
                 }
             } else {
                 api_login(user.email, user.password);
+                // possibly make this go to user page
                 history.push("/");
             }
         });
@@ -73,6 +90,7 @@ export default function CreateUser() {
 
     return (
         <div className="margin padding">
+            <h1>Create Account</h1>
             <Form onSubmit={onSubmit}>
                 <Form.Group>
                     <Form.Label>Name</Form.Label>
