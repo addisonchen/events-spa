@@ -4,19 +4,20 @@ defmodule EventsApiWeb.CommentController do
   alias EventsApi.Comments
   alias EventsApi.Comments.Comment
 
-  plug :requireInvited when action in [:create]
+  plug :requireInvitedOrOwner when action in [:create]
   plug :requireOwner when action in [:update, :delete]
 
   action_fallback EventsApiWeb.FallbackController
 
-  def requireInvited(conn, _args) do
+  def requireInvitedOrOwner(conn, _args) do
     token = Enum.at(get_req_header(conn, "x-auth"), 0)
     case Phoenix.Token.verify(conn, "user_id",
           token, max_age: 86400*3) do
       {:ok, user_id} ->
         user = EventsApi.Users.get_user!(user_id)
         invite = EventsApi.Invites.get_invite(conn.params["comment"]["meeting_id"], user.email)
-        if invite != nil do
+        meeting = EventsApi.Meetings.get_meeting!(conn.params["comment"]["meeting_id"])
+        if (invite != nil) || (user_id == meeting.user_id) do
           conn
         else
           conn

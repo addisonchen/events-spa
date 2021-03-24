@@ -45,7 +45,7 @@ function LoggedIn({session}) {
     function logout(ev) {
         ev.preventDefault();
         store.dispatch({type: 'session/clear'});
-        history.go(0);
+        history.go("/");
     }
 
     return (
