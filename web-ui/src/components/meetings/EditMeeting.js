@@ -143,7 +143,9 @@ function EditMeeting({session}) {
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Time</Form.Label>
-                        <InlineDateTimePicker sideBySide={true} onChange={updateDate} onShow={onShowDate} date={date} />
+                        <div style={{position: "relative"}}>
+                            <InlineDateTimePicker sideBySide={true} onChange={updateDate} onShow={onShowDate} date={date} />
+                        </div>
                         { errors.date ?
                             <Form.Text className="text-danger">{errors.date}</Form.Text>
                         :
