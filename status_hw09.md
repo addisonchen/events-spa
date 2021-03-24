@@ -13,7 +13,7 @@ https://github.com/addisonchen/events-spa
 
 
 3. What's the URL that you deployed to?
-http://events-spa.swoogity.com/meetings/3
+http://events-spa.swoogity.com
 
 
 4. Is your app functionality complete? If not, what's missing?
