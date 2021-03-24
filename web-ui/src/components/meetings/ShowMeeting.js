@@ -207,7 +207,7 @@ function Comments({session, props}) {
         <div className="customContainer" style={{marginTop: "20px"}}>
             <h3>Comments</h3>
             { session ?
-                props.meeting.invites.some((i) => i.email === session.email) ?
+                (props.meeting.invites.some((i) => i.email === session.email) || (props.meeting.user_id === session.user_id)) ?
                     <Form onSubmit={onSubmit}>
                         <Form.Group>
                             <Form.Label>Write Comment</Form.Label>

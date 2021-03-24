@@ -22,12 +22,12 @@ function App() {
             <Home />
           </Route> 
 
-          <Route exact path="/users/:id">
-            <ShowUser />
-          </Route>
-
           <Route exact path="/users/create">
             <CreateUser inline={false} />
+          </Route>
+
+          <Route exact path="/users/:id">
+            <ShowUser />
           </Route>
 
           <Route exact path="/users/edit/:id">
